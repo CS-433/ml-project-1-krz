@@ -253,25 +253,22 @@ def cross_validation(y, tx, k_indices, k, lambda_, degree):
         te_x = np.array(te_x)
         te_y = np.array(te_y)
 
-        #w_s, tr_e = ridge_regression(tr_y, tr_x, lambda_)
-        #te_e = compute_mse(te_y, te_x, w_s)
+        w_s, tr_e = ridge_regression(tr_y, tr_x, lambda_)
+        te_e = compute_mse(te_y, te_x, w_s)
 
-        initial_w = np.zeros(shape=(tx.shape[1], 1))
-        max_iters = 100
-        gamma = 0.1
-        threshold = 1e-8
+        #initial_w = np.zeros(shape=(tx.shape[1], 1))
+        #max_iters = 100
+        #gamma = 0.1
+        #threshold = 1e-8
 
-        w_s, tr_e = reg_logistic_regression_mod(y, tx, lambda_, initial_w, max_iters, gamma, threshold)
-        te_e = calculate_reg_log_loss(te_y, te_x, w_s, lambda_)
-
-        #w_s, tr_e = reg_logistic_regression_mod(
-        #    tr_y, tr_x, lambda_, initial_w, max_iters, gamma, threshold)
+        #(y, tx, lambda_, initial_w, max_iters, gamma, threshold)
         #te_e = calculate_reg_log_loss(te_y, te_x, w_s, lambda_)
+
 
         losses_tr.append(np.sqrt(2 * tr_e))
         losses_te.append(np.sqrt(2 * te_e))
 
-        print('Performed cross validation {}'.format(f))
+        #print('Performed cross validation {}'.format(f))
 
     loss_tr = sum(losses_tr) / k
     loss_te = sum(losses_te) / k
@@ -296,15 +293,17 @@ def cross_validation_demo(y, tx, seed, k_fold, degree, lambdas):
         rmse_tr.append(loss_tr)
         rmse_te.append(loss_te)
 
-        print('Lambda value {i}, rmse_tr = {tr}, rmse_te = {te}'.format(i=i, tr=rmse_tr, te=rmse_te))
+        print('Lambda value {i} (={v}), rmse_tr = {tr}, rmse_te = {te}'.format(i=i, v=lambdas[i], tr=loss_tr, te=loss_te))
 
         if (i >= 1):
+            plt.clf()
             plt.semilogx(lambdas[0:i + 1], rmse_tr, marker=".", color='b', label='train error')
             plt.semilogx(lambdas[0:i + 1], rmse_te, marker=".", color='r', label='test error')
             plt.xlabel("lambda")
             plt.ylabel("rmse")
-            plt.xlim(1e-4, 1)
+            #plt.xlim(1e-4, 1)
             plt.title("cross validation")
             plt.legend(loc=2)
             plt.grid(True)
             plt.savefig("cross_validation")
+            plt.show()
