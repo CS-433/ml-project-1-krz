@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import itertools as it
 from implementations import ridge_regression, logistic_regression, least_squares
 from proj1_helpers import *
+from model_imp import *
 
 ############################# HELPER FUNCTIONS #################################
 
