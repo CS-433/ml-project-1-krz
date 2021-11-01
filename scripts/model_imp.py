@@ -67,11 +67,33 @@ def build_k_indices(y, k_fold, seed):
                  for k in range(k_fold)]
     return np.array(k_indices)
 
+def build_poly(x, degree):
+    """polynomial basis functions for input data x, for j=0 up to j=degree."""
+    poly = np.ones((len(x), 1))
+    for deg in range(1, degree+1):
+        poly = np.c_[poly, np.power(x, deg)]
+    return poly
+
+
+def poly_expansion(tx, deg) :
+    """polynomial basis functions for input data x, for j=1 up to j=degree."""
+    rows = tx.shape[0]
+    cols = tx.shape[1]*deg + 1
+    poly_array = np.ones((rows,cols))
+    for i in range(tx.shape[1]):
+        #poly = np.vander(x[:,i],deg+1,increasing=True)[:,1:]
+        poly = build_poly(tx[:,i], deg)[:,1:]
+        for j in range(deg):
+            poly_array[:,i*deg+j] = poly[:,j]
+    return poly_array
+
 
 def cross_validation(y, tx, k_indices, k, lambda_, degree):
     """Return the loss of regression"""
     losses_tr = []
     losses_te = []
+
+    tx_exp = poly_expansion(tx, degree)
 
     for f in range(0, k):
         tr_x = []
@@ -80,10 +102,10 @@ def cross_validation(y, tx, k_indices, k, lambda_, degree):
         te_y = []
         for i in range(0, len(tx)):
             if (i in k_indices[f]):
-                te_x.append(tx[i])
+                te_x.append(tx_exp[i])
                 te_y.append(y[i])
             else:
-                tr_x.append(tx[i])
+                tr_x.append(tx_exp[i])
                 tr_y.append(y[i])
 
         #tr_poly = build_poly(tr_x, degree)
@@ -146,6 +168,37 @@ def cross_validation_demo(y, tx, seed, k_fold, degree, lambdas):
             plt.xlabel("lambda")
             plt.ylabel("rmse")
             #plt.xlim(1e-4, 1)
+            plt.title("cross validation")
+            plt.legend(loc=2)
+            plt.grid(True)
+            plt.savefig("cross_validation")
+            plt.show()
+
+def cross_validation_demo_2(y, tx, seed, k_fold, degree, lambdas):
+    #seed = 1
+    #degree = 7
+    #k_fold = 4
+    #lambdas = np.logspace(-4, 0, 30)
+
+    k_indices = build_k_indices(y, k_fold, seed)
+
+    rmse_tr = []
+    rmse_te = []
+
+    for i in range(0, len(degree)):
+        loss_tr, loss_te = cross_validation(y, tx, k_indices, k_fold, lambdas[0], degree[i])
+        rmse_tr.append(loss_tr)
+        rmse_te.append(loss_te)
+
+        print('rmse_tr = {tr}, rmse_te = {te}'.format(tr=loss_tr, te=loss_te))
+
+        if (i >= 1):
+            plt.clf()
+            plt.semilogx(degree[0:i + 1], rmse_tr, marker=".", color='b', label='train error')
+            plt.semilogx(degree[0:i + 1], rmse_te, marker=".", color='r', label='test error')
+            plt.xlabel("degree")
+            plt.ylabel("rmse")
+                #plt.xlim(1e-4, 1)
             plt.title("cross validation")
             plt.legend(loc=2)
             plt.grid(True)
