@@ -12,7 +12,8 @@ Project 1 for the EPFL ML course.
 > Note: our scripts assume that there is a `data` directory at the root of the project containing two uncompressed files: `test.csv` and `train.csv`.
 
 - [**exploration.ipynb**](scripts/exploration.ipynb): Contains most of the code along with all data visualization methods.
-- [**run.py**](scripts/run.py): Run this file to generate our best prediction.
+- [**run.py**](scripts/run.py): Run this file to generate our best prediction. The code is better understood by going through `exploration.ipynb`, which
+explains our reasoning and methods; this file only contains the code necessary to train the model and generate the prediction.
 - [**implementations.py**](scripts/implementations.py): The 6 methods to implement.
 - [**model_imp.py**](scripts/model_imp.py): Helper functions for our custom model implementation.
 - [**helpers.py**](scripts/helpers.py), [**plots.py**](scripts/plots.py), [**proj1_helpers.py**](scripts/proj1_helpers.py): Helper functions to generate prediction and visualize code (not implemented by us)
