@@ -45,24 +45,21 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
 
 
 def sigmoid(t):
-    """Apply the sigmoid function on t."""
+    """Apply the sigmoid function to t"""
     return 1./(1 + np.exp(-t))
 
 def calculate_reg_log_loss(y, tx, w, lambda_):
     """Compute the loss: negative log likelihood."""
     loss = 0
-    for i in range(0, len(y)):
-        sig = sigmoid(tx[i].T @ w)
-        loss += y[i]*np.log(sig) + (1 - y[i])*np.log(1 - sig)
+    for i in range(len(y)):
+        arg = tx[i].T @ w
+        loss += np.log(1 + np.exp(arg)) - y[i] * arg
 
-    return -loss + (lambda_ / 2) * np.dot(w.T, w)
+    return loss + (lambda_ / 2) * np.linalg.norm(w)
 
 def calculate_reg_log_gradient(y, tx, w, lambda_):
     """Compute the gradient of log loss."""
-    grad = 0
-    for i in range(0, len(y)):
-        grad += tx[i].T * (sigmoid(tx[i].T @ w) - y[i])
-
+    grad = tx.T @ (sigmoid(tx @ w) - y.reshape((y.shape[0], 1)))
     return grad.reshape((w.shape[0], 1)) + lambda_ * w
 
 
