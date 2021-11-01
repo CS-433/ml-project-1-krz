@@ -85,7 +85,7 @@ def predict_category_labels(weights_arr, tX_test):
     final_features = build_final_features(tx_cats)
     predictions = []
     for ind, cat in enumerate(final_features):
-        predictions.append(predict_labels(weights_arr[ind], cat))
+        predictions.append(predict_labels(weights_arr[ind], poly_expansion(cat, 3)))
 
     return recombine_data(predictions, tX_test)
 
@@ -213,7 +213,7 @@ max_iters = 5
 for i in jet_cat:
     initial_w = np.zeros(shape=(final_features[i].shape[1], 1))
     #weights, loss = logistic_regression(y_cats[i], final_features[i], initial_w, max_iters, gamma)
-    weights, loss = ridge_regression(y_cats[i], final_features[i], lambda_)
+    weights, loss = ridge_regression(y_cats[i], poly_expansion(final_features[i], 3), lambda_)
     weights_arr.append(weights)
 
 DATA_TEST_PATH = '../data/test.csv' # TODO: download train data and supply path here
