@@ -18,7 +18,7 @@ Project 1 for the EPFL ML course.
 - [**helpers.py**](scripts/helpers.py), [**plots.py**](scripts/plots.py), [**proj1_helpers.py**](scripts/proj1_helpers.py): Helper functions to generate prediction and visualize code (not implemented by us)
 
 ## Report:
-Our report can be found in `report/report.pdf`.
+Our report can be found in [report/report-krz.pdf](report/report-krz.pdf).
 
 ## Output:
 
