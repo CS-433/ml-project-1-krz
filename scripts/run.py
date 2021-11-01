@@ -171,10 +171,6 @@ for label in labels:
 
 cleaned_x = np.array(cleaned_xt).T
 
-# Sanity check: in relevant indexes of the data, there should no longer be any unknown values
-truth_values = []
-for i in jet_cat:
-    truth_values.append(np.all(cleaned_x.T[rel_ind[i]] != -999.0))
 
 tx_cats = []
 for i in jet_cat:
@@ -182,10 +178,6 @@ for i in jet_cat:
     relevant_subset = subset.T[rel_ind[i]]
     tx_cats.append(relevant_subset.T)
 
-# Sanity check: number of features of categories is same as number of relevant features
-truth_values = []
-for i in jet_cat:
-    truth_values.append(len(tx_cats[i].T) == len(rel_ind[i]))
 
 low_corr_features = {
     0: ['PRI_tau_eta', 'PRI_tau_phi', 'PRI_lep_eta', 'PRI_lep_phi', 'PRI_met_phi'],
@@ -199,10 +191,6 @@ low_corr_features = {
 
 final_features = build_final_features(tx_cats)
 
-truth_values = []
-for i in jet_cat:
-    tx_cats[i] = (tx_cats[i] - np.mean(tx_cats[i], axis=0)) / np.std(tx_cats[i], axis=0)
-    truth_values.append(np.allclose(0, np.mean(tx_cats[i], axis=0)) and np.allclose(1, np.std(tx_cats[i], axis=0)))
 
 
 weights_arr = []
